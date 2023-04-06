@@ -3,8 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express()
-const getCursos = require('./apis/cursos.js')
-const alunos = require('./apis/alunos.js')
+const getCursos = require('./Back-end/apis/cursos.js')
+const alunos = require('./Back-end/apis/alunos.js')
 
 app.use((request, response, next) => {
 
