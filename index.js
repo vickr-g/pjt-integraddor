@@ -24,11 +24,39 @@ app.get('/v1/lion-school/cursos', cors(), async function (request, response, nex
 
 })
 
+app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
+    
+    console.log(('query'));
+    let curso = request.query.sigla
+    let getCursoAluno = alunos.getAlunosCurso(curso)
+    if (curso == undefined || curso == '' || curso == null) {
+        response.status(404)
+        response.json('sigla não identificada')
+    }
+    else if (curso == Number) {
+        response.status(400)
+    }
+    else {
+        response.json(getCursoAluno)
+        response.status(200)
+    }
+})
+    
+
 app.get('/v1/lion-school/alunos', cors(), async function (request, response, next) {
 
+    console.log('teste');
     let listaAlunos = alunos.getAlunos()
     response.json(listaAlunos)
     response.status(200)
+    
+    
+
+   
+
+
+    
+
 })
 
 app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, response, next) {
@@ -48,29 +76,11 @@ app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, re
 
 
 })
-app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
 
-    let curso = request.query.sigla
 
-    let getCursoAluno = getCursos.getCursos(alunos)
+app.get('/v1/lion-school/alunos/status', cors(), async function (request, response, next) {
 
-    if (curso == undefined || curso == '' || curso == null) {
-        response.status(404)
-        response.json('sigla não identificada')
-    }
-    else if (curso == Number) {
-        response.status(400)
-    }
-    else {
-        response.json(getCursoAluno)
-        response.status(200)
-    }
-
-})
-
-app.get('/v1/lion-school/alunos/status/:status', cors(), async function (request, response, next) {
-
-    let statusAluno = request.params.status
+    let statusAluno = request.query.status
     let getAluno = alunos.getAlunosStatus(statusAluno)
 
     if (getAluno == null || getAluno == ' ' || getAluno == undefined) {
