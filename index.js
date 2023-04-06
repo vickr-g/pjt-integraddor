@@ -16,8 +16,10 @@ app.use((request, response, next) => {
 
 app.get('/v1/lion-school/cursos', cors(), async function (request, response, next) {
 
+    let cursosOferecidos = {}
     let listaCursos = cursos.getCursos()
-    response.json(listaCursos)
+    cursosOferecidos = listaCursos
+    response.json(cursosOferecidos)
     response.status(200)
 
 })
@@ -46,7 +48,7 @@ app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, re
 
 
 })
-app.get('/v1/lion-school/alunos/cursos/sigla', cors(), async function (request, response, next) {
+app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
 
     let curso = request.query.sigla
 
