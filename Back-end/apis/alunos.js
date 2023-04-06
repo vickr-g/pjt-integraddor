@@ -763,6 +763,23 @@ const getAlunosStatus = (status) => {
     else return statuss
 
 }
+const getAlunoPeloAno = (ano) => {
+    let teste = alunos.forEach(function (dados) {
+        return dados.nome
+    })
+    alunos.forEach(function (dados) {
+        dados.curso.forEach(function (dados) {
+            if (ano == dados.conclusao) {
+
+                console.log(teste);
+
+
+            }
+        })
+    })
+}
+console.log(getAlunoPeloAno('2020'));
+
 module.exports =
 {
     getAlunos,
