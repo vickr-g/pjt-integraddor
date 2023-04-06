@@ -17,7 +17,7 @@ app.use((request, response, next) => {
 app.get('/v1/lion-school/cursos', cors(), async function (request, response, next) {
 
     let cursosOferecidos = {}
-    let listaCursos = cursos.getCursos()
+    let listaCursos = getCursos.getCursos()
     cursosOferecidos = listaCursos
     response.json(cursosOferecidos)
     response.status(200)
