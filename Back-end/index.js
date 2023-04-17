@@ -15,43 +15,95 @@ app.use((request, response, next) => {
     app.use(cors())
     next()
 })
-
-app.get('/v1/lion-school/cursos', cors(), async function (request, response, next) {
-
-    let cursosOferecidos = {}
-    let listaCursos = getCursos.getCursos()
-    cursosOferecidos = listaCursos
-    response.json(cursosOferecidos)
-    response.status(200)
-
-})
-
-app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
-    
-    console.log(('query'));
-    let curso = request.query.sigla
-    let getCursoAluno = alunos.getAlunosCurso(curso)
-    if (curso == undefined || curso == '' || curso == null) {
-        response.status(404)
-        response.json('sigla não identificada')
-    }
-    else if (curso == Number) {
-        response.status(400)
-    }
-    else {
-        response.json(getCursoAluno)
-        response.status(200)
-    }
-})
     
 
 app.get('/v1/lion-school/alunos', cors(), async function (request, response, next) {
 
-    console.log('teste');
-    let listaAlunos = alunos.getAlunos()
-    response.json(listaAlunos)
-    response.status(200)
+    let statusCode
+    let alunosJson = {}
+
+    let nomeCurso = request.query.curso
+    let statusAluno = request.query.status
+    let anoConclusao = request.query.ano
+
+
+     if ( !isNaN(statusAluno) || !isNaN(nomeCurso) || statusAluno == '' || nomeCurso == ''){
     
+        statusCode = 400
+        alunosJson.message = 'Não foi possível processar pois os dados de entrada enviados não correspondem ao exigido.'
+        
+    } 
+    
+    //Se não possui query, retorna todos os alunos
+    else if (nomeCurso == undefined && statusAluno == undefined && anoConclusao == undefined) {
+
+        let alunoss = alunos.getAlunos()
+        console.log('todos');
+
+        if (alunoss) {
+            statusCode = 200
+            alunosJson = alunoss
+        } else {
+            statusCode = 500
+            alunosJson.message = 'Não foi possível obter uma resposta.'
+        }
+
+    //Filtra os alunos pela sigla do curso
+    } else if (nomeCurso != null && statusAluno == undefined && anoConclusao == undefined) {
+
+        let alunoss = alunos.getAlunosCurso(nomeCurso)
+        console.log('sigla');
+
+        if (alunoss) {
+            statusCode = 200
+            alunosJson = alunoss
+        } else {
+            statusCode = 404
+            alunosJson.message = 'Não foi possível obter uma resposta.'
+        }
+
+
+    }
+
+    //Filtra os alunos pelo status
+    else if (statusAluno != null && nomeCurso == undefined || anoConclusao == undefined) {
+
+        let alunosPorStatus = alunos.getAlunosStatus(statusAluno)
+        console.log('status');
+
+        if (alunosPorStatus) {
+            statusCode = 200
+            alunosJson = alunosPorStatus
+        } else {
+            statusCode = 404
+            alunosJson.message = 'Não foi possível obter uma resposta.'
+        }
+
+
+    } else if (anoConclusao != null && statusAluno == undefined && nomeCurso == undefined) {
+        let alunoss = alunos.getAlunoPeloAno(anoConclusao)
+        console.log('ano');
+
+        if (alunoss) {
+            statusCode = 200
+            alunosJson = alunoss
+        } else {
+            statusCode = 404
+            alunosJson.message = 'Não foi possível obter uma resposta.'
+        }   
+    }
+
+    response.json(alunosJson)
+    response.status(statusCode)
+
+
+
+    // console.log('teste');
+    // let listaAlunos = alunos.getAlunos()
+    // response.json(listaAlunos)
+    // response.status(200)
+    
+
 
 })
 
@@ -70,23 +122,6 @@ app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, re
         response.status(200)
     }
 
-
-})
-
-
-app.get('/v1/lion-school/alunos/status', cors(), async function (request, response, next) {
-
-    let statusAluno = request.query.status
-    let getAluno = alunos.getAlunosStatus(statusAluno)
-
-    if (getAluno == null || getAluno == ' ' || getAluno == undefined) {
-        response.json('status não indentificado')
-        response.status(404)
-    }
-    else {
-        response.json(getAluno)
-        response.status(200)
-    }
 
 })
 
