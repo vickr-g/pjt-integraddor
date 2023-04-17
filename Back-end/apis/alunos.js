@@ -722,7 +722,7 @@ const getAlunosCurso = (curso) => {
     let arrayAlunosCursos = []
     let status = false
     alunos.forEach(function(aluno){
-        if(aluno.curso[0].sigla == curso.toUpperCase()){
+        if(aluno.curso[0].sigla == curso){
             arrayAlunosCursos.push(aluno)
             status = true
         }

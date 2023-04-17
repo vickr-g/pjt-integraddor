@@ -27,18 +27,19 @@ app.get('/v1/lion-school/cursos', cors(), async function (request, response, nex
 })
 
 app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
-    
+
     console.log(('query'));
     let curso = request.query.sigla
-    let getCursoAluno = alunos.getAlunosCurso(curso)
     let anoConclusao = request.query.ano
     let getAlunoAno = alunos.getAlunoPeloAno(anoConclusao)
+    let getCursoAluno = alunos.getAlunosCurso(curso)
 
-    if (getAlunoAno == null || getAlunoAno == ' ' || getAlunoAno == undefined || getAlunoAno == parseInt('4') ) {
+
+    if (anoConclusao == null || anoConclusao == ' ' || anoConclusao == undefined || anoConclusao == parseInt('4')) {
         response.json('ano não indentificado')
         response.status(404)
     }
-    else {
+    else if (anoConclusao){
         response.json(getAlunoAno)
         response.status(200)
     }
@@ -49,12 +50,12 @@ app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, respon
     else if (curso == Number) {
         response.status(400)
     }
-    else {
+    else if (curso){
         response.json(getCursoAluno)
         response.status(200)
     }
 })
-    
+
 
 app.get('/v1/lion-school/alunos', cors(), async function (request, response, next) {
 
@@ -62,8 +63,8 @@ app.get('/v1/lion-school/alunos', cors(), async function (request, response, nex
     let listaAlunos = alunos.getAlunos()
     response.json(listaAlunos)
     response.status(200)
-    
-    
+
+
 
 })
 
