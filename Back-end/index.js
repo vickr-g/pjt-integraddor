@@ -27,22 +27,10 @@ app.get('/v1/lion-school/cursos', cors(), async function (request, response, nex
 })
 
 app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
-
+    
     console.log(('query'));
     let curso = request.query.sigla
-    let anoConclusao = request.query.ano
-    let getAlunoAno = alunos.getAlunoPeloAno(anoConclusao)
     let getCursoAluno = alunos.getAlunosCurso(curso)
-
-
-    if (anoConclusao == null || anoConclusao == ' ' || anoConclusao == undefined || anoConclusao == parseInt('4')) {
-        response.json('ano não indentificado')
-        response.status(404)
-    }
-    else if (anoConclusao){
-        response.json(getAlunoAno)
-        response.status(200)
-    }
     if (curso == undefined || curso == '' || curso == null) {
         response.status(404)
         response.json('sigla não identificada')
@@ -50,12 +38,12 @@ app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, respon
     else if (curso == Number) {
         response.status(400)
     }
-    else if (curso){
+    else {
         response.json(getCursoAluno)
         response.status(200)
     }
 })
-
+    
 
 app.get('/v1/lion-school/alunos', cors(), async function (request, response, next) {
 
@@ -63,8 +51,7 @@ app.get('/v1/lion-school/alunos', cors(), async function (request, response, nex
     let listaAlunos = alunos.getAlunos()
     response.json(listaAlunos)
     response.status(200)
-
-
+    
 
 })
 
@@ -102,6 +89,7 @@ app.get('/v1/lion-school/alunos/status', cors(), async function (request, respon
     }
 
 })
+
 
 
 app.listen(8080, function () {
