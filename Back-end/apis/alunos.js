@@ -763,27 +763,30 @@ const getAlunosStatus = (status) => {
     else return statuss
 
 }
-// const getAlunoPeloAno = (ano) => {
-//     let teste = alunos.forEach(function (dados) {
-//         return dados.nome
-//     })
-//     alunos.forEach(function (dados) {
-//         dados.curso.forEach(function (dados) {
-//             if (ano == dados.conclusao) {
+const getAlunoPeloAno = (ano) => {
+    let json = {}
+    let array = []
+    let status = false
+    alunos.forEach(function (dados) {
+        if (ano == dados.curso[0].conclusao) {
+            array.push(dados)
+            status = true
+        }
 
-//                 console.log(teste);
-
-
-//             }
-//         })
-//     })
-// }
-// console.log(getAlunoPeloAno('2020'));
-
+    })
+    json = { alunos: array }
+    if (status) {
+        return json
+    }
+    else{
+      return false
+    }
+}
 module.exports =
 {
     getAlunos,
     getAlunoPelaMatricula,
     getAlunosStatus,
-    getAlunosCurso
+    getAlunosCurso,
+    getAlunoPeloAno
 }

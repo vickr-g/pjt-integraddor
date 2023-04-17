@@ -6,6 +6,8 @@ const app = express()
 const getCursos = require('./apis/cursos.js')
 const alunos = require('./apis/alunos.js')
 
+
+
 app.use((request, response, next) => {
 
     response.header('Access-Control-Allow-Origin', '*')
@@ -27,19 +29,40 @@ app.get('/v1/lion-school/cursos', cors(), async function (request, response, nex
 app.get('/v1/lion-school/alunos/cursos', cors(), async function (request, response, next) {
     
     console.log(('query'));
-    let curso = request.query.sigla
-    let getCursoAluno = alunos.getAlunosCurso(curso)
-    if (curso == undefined || curso == '' || curso == null) {
-        response.status(404)
-        response.json('sigla não identificada')
+    let statusDoAluno = request.query.status
+    let cursoDoAluno = request.query.siglaCurso
+    let anoDoAluno = request.query.anoDeConclusao
+    let listaAlunos
+    let status
+    if (statusDoAluno == undefined && cursoDoAluno == undefined && anoDoAluno == undefined) {
+        listaAlunos = alunosLionSchool.getAlunos()
+        status = true
     }
-    else if (curso == Number) {
-        response.status(400)
+    else if (statusDoAluno != undefined) {
+        listaAlunos = alunosLionSchool.getAlunosStatus(statusDoAluno)
+        status = true
+    }
+    else if(anoDoAluno != undefined){
+        listaAlunos = alunosLionSchool.getAlunoPeloAno(anoDoAluno)
+        status = true
     }
     else {
-        response.json(getCursoAluno)
+        listaAlunos = alunosLionSchool.getAlunosCurso(cursoDoAluno)
+        if (listaAlunos == true) {
+            listaAlunos
+            status = true
+        }
+    }
+    if(listaAlunos == false){
+        response.status(404)
+        response.json('erro')
+        
+    }
+    else{
+        response.json(listaAlunos)
         response.status(200)
     }
+  
 })
     
 
@@ -49,15 +72,10 @@ app.get('/v1/lion-school/alunos', cors(), async function (request, response, nex
     let listaAlunos = alunos.getAlunos()
     response.json(listaAlunos)
     response.status(200)
+ 
     
-    
-
-   
-
-
-    
-
 })
+    
 
 app.get('/v1/lion-school/alunos/:matricula', cors(), async function (request, response, next) {
 
@@ -93,6 +111,8 @@ app.get('/v1/lion-school/alunos/status', cors(), async function (request, respon
     }
 
 })
+
+
 app.listen(8080, function () {
     console.log('Servidor aguardando requisições na porta 8080');
 })
